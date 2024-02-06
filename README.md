@@ -34,12 +34,12 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Ptechgithub/NginxReverseProx
 ![21](https://raw.githubusercontent.com/Ptechgithub/configs/main/media/21.jpg)
 
 
-- Client
+### Client
 
 ![23](https://raw.githubusercontent.com/Ptechgithub/configs/main/media/23.gif)
 
 ---
-
+---
 ## نحوه ی کانفیگ GRPC
 
 - پنل

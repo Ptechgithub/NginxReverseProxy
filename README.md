@@ -30,7 +30,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Ptechgithub/NginxReverseProx
 ## نحوی کانفیگ WebSocket
 
 - پنل 
-
+![21](https://raw.githubusercontent.com/Ptechgithub/configs/main/media/21.jpg)
 
 
 - کلاینت 
@@ -40,7 +40,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Ptechgithub/NginxReverseProx
 ## نحوه ی کانفیگ GRPC
 
 - پنل
-
+![22](https://raw.githubusercontent.com/Ptechgithub/configs/main/media/22.jpg)
 
 
 - کلاینت

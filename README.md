@@ -35,3 +35,13 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Ptechgithub/NginxReverseProx
 
 - کلاینت 
 
+
+
+## نحوه ی کانفیگ GRPC
+
+- پنل
+
+
+
+- کلاینت
+

@@ -17,7 +17,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Ptechgithub/NginxReverseProx
 در بخش تنظیمات Network تیک گزینه ی GRPC را فعال کنید. 
 
 در بخش SSL/TLS encryption mode گزینه ی Full را انتخاب کنید.
+
 پس از اجرای اسکریپت، دامنه‌ی مورد نظر خود را وارد کنید و مراحل نصب را دنبال کنید.
+
 اسکریپت برای دامنه‌ی شما `SSL certificate` را  دریافت خواهد کرد و تنظیمات NGINX Reverse Proxy را اعمال می‌کند.
 و در نهایت به شما مسیر سرتیفیکت را میدهد. که میتوانید در پنل خود استفاده کنید.
 در این اسکریپت `Path` را خودتان انتخاب می‌کنید.

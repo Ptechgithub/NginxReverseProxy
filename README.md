@@ -26,3 +26,11 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Ptechgithub/NginxReverseProx
 برای استفاده در پنل `x-ui` تنها کافیست به صورت زیر برای grpc و ws اقدام کنید:
 
 ---
+
+## نحوی کانفیگ WebSocket
+
+- پنل 
+
+
+
+- کلاینت 

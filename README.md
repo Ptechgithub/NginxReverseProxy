@@ -13,7 +13,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Ptechgithub/NginxReverseProx
 ---
 ## استفاده
 ابتدا در CDN خود مثلا Cloudflare یک A record بسازید و آی پی سرور را به دامین یا ساب دامین خود اشاره بدید و تیک پروکسی هم روشن کنید.
+
 در بخش تنظیمات Network تیک گزینه ی GRPC را فعال کنید. 
+
 در بخش SSL/TLS encryption mode گزینه ی Full را انتخاب کنید.
 پس از اجرای اسکریپت، دامنه‌ی مورد نظر خود را وارد کنید و مراحل نصب را دنبال کنید.
 اسکریپت برای دامنه‌ی شما `SSL certificate` را  دریافت خواهد کرد و تنظیمات NGINX Reverse Proxy را اعمال می‌کند.

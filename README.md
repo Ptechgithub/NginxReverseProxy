@@ -25,6 +25,8 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Ptechgithub/NginxReverseProx
 در این اسکریپت `Path` را خودتان انتخاب می‌کنید.
 برای استفاده در پنل `x-ui` تنها کافیست به صورت زیر برای grpc و ws اقدام کنید:
 
+تصاویر Client به صورت gif است اگر ثابت بود روی ان کلیک کنید تا پخش شود.
+
 ---
 
 ## نحوی کانفیگ WebSocket

@@ -187,8 +187,8 @@ check_status() {
 # Function to check installation status
 check_installation() {
   if systemctl is-active --quiet nginx && [ -f "/etc/nginx/sites-available/$domain" ]; then
-    echo ""
     (crontab -l 2>/dev/null | grep -v 'certbot renew --nginx --force-renewal --non-interactive --post-hook "nginx -s reload"' ; echo '0 0 1 * * certbot renew --nginx --force-renewal --non-interactive --post-hook "nginx -s reload" > /dev/null 2>&1;') | crontab -
+    echo ""
     echo -e "${Purple}Certificate and Key saved at:${rest}"
     echo -e "${yellow}×××××××××××××××××××××××××××××××××××××××××××××××××××××${rest}"
     echo -e "${cyan}/etc/letsencrypt/live/$domain/fullchain.pem${rest}"

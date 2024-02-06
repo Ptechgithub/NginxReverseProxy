@@ -12,7 +12,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Ptechgithub/NginxReverseProx
 
 ---
 ## استفاده
-ابتدا در CDN خود مثلا Cloudflare یک A record بسازید و آی پی سرور را به دامین یا ساب دامین خود اشاره بدید و تیک پروکسی هم روشن کنید.
+- ابتدا در CDN خود مثلا Cloudflare یک A record بسازید و آی پی سرور را به دامین یا ساب دامین خود اشاره بدید و تیک پروکسی هم روشن کنید.
 
 در بخش تنظیمات Network تیک گزینه ی GRPC را فعال کنید. 
 

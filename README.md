@@ -34,8 +34,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Ptechgithub/NginxReverseProx
 
 
 - کلاینت 
+![23](https://raw.githubusercontent.com/Ptechgithub/configs/main/media/23.gif)
 
-
+---
 
 ## نحوه ی کانفیگ GRPC
 
@@ -44,4 +45,4 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Ptechgithub/NginxReverseProx
 
 
 - کلاینت
-
+![24](https://raw.githubusercontent.com/Ptechgithub/configs/main/media/24.gif)

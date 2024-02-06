@@ -29,7 +29,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Ptechgithub/NginxReverseProx
 
 ## نحوی کانفیگ WebSocket
 
-- Panel
+### Panel
 
 ![21](https://raw.githubusercontent.com/Ptechgithub/configs/main/media/21.jpg)
 

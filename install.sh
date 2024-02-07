@@ -40,7 +40,7 @@ detect_distribution() {
 check_dependencies() {
     detect_distribution
     sudo "${p_m}" -y update && sudo "${p_m}" -y upgrade
-    local dependencies=("nginx" "certbot" "python3-certbot-nginx")
+    local dependencies=("nginx" "git" "certbot" "python3-certbot-nginx")
     
     for dep in "${dependencies[@]}"; do
         if ! command -v "${dep}" &> /dev/null; then
@@ -206,6 +206,7 @@ check_installation() {
 # Change Paths
 path() {
   if systemctl is-active --quiet nginx && [ -f "/etc/nginx/sites-available/$saved_domain" ]; then
+     
     echo -e "${yellow}×××××××××××××××××××××××${rest}"
     read -p "Enter the new GRPC path (Service Name) [default: grpc]: " new_grpc_path
     new_grpc_path=${new_grpc_path:-grpc}
@@ -230,6 +231,35 @@ ${cyan}| WebSocket Path  | ${yellow}$new_ws_path  ${cyan}
     echo -e "${red}N R P is not installed.${rest}"
     echo -e "${yellow}×××××××××××××××××××××××${rest}"
   fi
+}
+
+# Install random site
+install_random_fake_site() {
+    if ! command -v nginx &> /dev/null; then
+        echo -e "${yellow}×××××××××××××××××××××××${rest}"
+        echo -e "${red}Nginx is not installed.${rest}"
+        exit 1
+    fi
+
+    if [ ! -d "/var/www/html" ]; then
+        echo -e "${yellow}×××××××××××××××××××××××${rest}"
+        echo -e "${red}/var/www/html does not exist.${rest}"
+        exit 1
+    fi
+
+    if [ ! -d "/var/www/website-templates" ]; then
+        echo -e "${yellow}×××××××××××××××××××××××${rest}"
+        echo -e "${yellow}Downloading Websites list...${rest}"
+        sudo git clone https://github.com/learning-zone/website-templates.git /var/www/website-templates
+    fi
+    
+    cd /var/www/website-templates
+    sudo rm -rf /var/www/html/*
+    random_folder=$(ls -d */ | shuf -n 1)
+    sudo mv "$random_folder"/* /var/www/html
+    echo -e "${yellow}×××××××××××××××××××××××${rest}"
+    echo -e "${green}Website Installed Successfully${rest}"
+    echo -e "${yellow}×××××××××××××××××××××××${rest}"
 }
 
 # Uninstall N R P
@@ -268,7 +298,9 @@ echo -e "${yellow} 1) ${green}Install           ${purple}*${rest}"
 echo -e "${purple}                      * ${rest}"
 echo -e "${yellow} 2) ${green}Change Paths${rest}      ${purple}*${rest}"
 echo -e "${purple}                      * ${rest}"
-echo -e "${yellow} 3) ${green}Uninstall${rest}         ${purple}*${rest}"
+echo -e "${yellow} 3) ${green}Install Fake Site${rest} ${purple}*${rest}"
+echo -e "${purple}                      * ${rest}"
+echo -e "${yellow} 4) ${green}Uninstall${rest}         ${purple}*${rest}"
 echo -e "${purple}                      * ${rest}"
 echo -e "${yellow} 0) ${purple}Exit${rest}${purple}              *${rest}"
 echo -e "${purple}***********************${rest}"
@@ -281,6 +313,9 @@ case "$choice" in
         path
         ;;
     3)
+        install_random_fake_site
+        ;;
+    4)
         uninstall
         ;;
     0)

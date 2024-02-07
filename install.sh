@@ -69,7 +69,6 @@ install() {
 	    echo -e "${yellow}×××××××××××××××××××××××${rest}"
 		echo -e "${cyan}N R P${green} is already installed.${rest}"
 		echo -e "${yellow}×××××××××××××××××××××××${rest}"
-		exit 0
 	else
 	# Ask the user for the domain name
 	echo -e "${yellow}×××××××××××××××××××××××${rest}"
@@ -172,7 +171,7 @@ EOL
 	# Restart NGINX service
 	sudo systemctl restart nginx || display_error "Failed to restart NGINX service"
 	check_installation
-    fi
+  fi
 }
 
 # Check installation statu
@@ -189,20 +188,47 @@ check_installation() {
   if systemctl is-active --quiet nginx && [ -f "/etc/nginx/sites-available/$domain" ]; then
     (crontab -l 2>/dev/null | grep -v 'certbot renew --nginx --force-renewal --non-interactive --post-hook "nginx -s reload"' ; echo '0 0 1 * * certbot renew --nginx --force-renewal --non-interactive --post-hook "nginx -s reload" > /dev/null 2>&1;') | crontab -
     echo ""
-    echo -e "${Purple}Certificate and Key saved at:${rest}"
+    echo -e "${purple}Certificate and Key saved at:${rest}"
     echo -e "${yellow}×××××××××××××××××××××××××××××××××××××××××××××××××××××${rest}"
     echo -e "${cyan}/etc/letsencrypt/live/$domain/fullchain.pem${rest}"
     echo -e "${cyan}/etc/letsencrypt/live/$domain/privkey.pem${rest}"
     echo -e "${yellow}×××××××××××××××××××××××××××××××××××××××××××××××××××××${rest}"
     echo -e "${cyan}🌟 N R P installed Successfully.🌟${rest}"
     echo -e "${yellow}××××××××××××××××××××××××××××××××${rest}"
-    exit 0
   else
     echo ""
     echo -e "${yellow}×××××××××××××××××××××××${rest}"
     echo -e "${red}❌N R P installation failed.❌${rest}"
     echo -e "${yellow}×××××××××××××××××××××××${rest}"
-    exit 1
+  fi
+}
+
+# Change Paths
+path() {
+  if systemctl is-active --quiet nginx && [ -f "/etc/nginx/sites-available/$saved_domain" ]; then
+    echo -e "${yellow}×××××××××××××××××××××××${rest}"
+    read -p "Enter the new GRPC path (Service Name) [default: grpc]: " new_grpc_path
+    new_grpc_path=${new_grpc_path:-grpc}
+    echo -e "${yellow}×××××××××××××××××××××××${rest}"
+    read -p "Enter the new WebSocket path (Service Name) [default: ws]: " new_ws_path
+    new_ws_path=${new_ws_path:-ws}
+    echo -e "${yellow}×××××××××××××××××××××××${rest}"
+    
+    sed -i "14s|location ~ .* {$|location ~ ^/${new_grpc_path}/(?<port>\\d+)/(.*)$ {|" /etc/nginx/sites-available/$saved_domain
+    sed -i "28s|location ~ .* {$|location ~ ^/${new_ws_path}/(?<port>\\d+)$ {|" /etc/nginx/sites-available/$saved_domain
+    
+    # Restart Nginx
+    systemctl restart nginx
+    echo -e " ${purple}Paths Changed Successfully${cyan}:
+|-----------------|-------|
+| GRPC Path       | ${yellow}$new_grpc_path
+${cyan}| WebSocket Path  | ${yellow}$new_ws_path  ${cyan}
+|-----------------|-------|${rest}"
+    echo -e "${yellow}×××××××××××××××××××××××${rest}"
+  else
+    echo -e "${yellow}×××××××××××××××××××××××${rest}"
+    echo -e "${red}N R P is not installed.${rest}"
+    echo -e "${yellow}×××××××××××××××××××××××${rest}"
   fi
 }
 
@@ -213,16 +239,14 @@ uninstall() {
     echo -e "${yellow}×××××××××××××××××××××××${rest}"
     echo -e "${red}N R P is not installed.${rest}"
     echo -e "${yellow}×××××××××××××××××××××××${rest}"
-    exit 0
   else
       echo -e "${green}☑️Uninstalling... ${rest}"
 	  # Remove SSL certificate files
 	  rm -rf /etc/letsencrypt > /dev/null 2>&1
-	  rm -rf /etc/letsencrypt > /dev/null 2>&1
 	
 	  # Remove NGINX configuration files
-	  rm /etc/nginx/sites-available/$saved_domain > /dev/null 2>&1
-	  rm /etc/nginx/sites-enabled/$saved_domain > /dev/null 2>&1
+	  find /etc/nginx/sites-available/ -mindepth 1 -maxdepth 1 ! -name 'default' -exec rm -rf {} +
+	  find /etc/nginx/sites-enabled/ -mindepth 1 -maxdepth 1 ! -name 'default' -exec rm -rf {} +
 	
 	  # Restart NGINX service
 	  systemctl restart nginx
@@ -242,7 +266,9 @@ echo -e "${yellow}* ${cyan}N${green}ginx ${cyan}R${green}everse ${cyan}P${green}
 echo -e "${purple}***********************${rest}"
 echo -e "${yellow} 1) ${green}Install           ${purple}*${rest}"
 echo -e "${purple}                      * ${rest}"
-echo -e "${yellow} 2) ${green}Uninstall${rest}         ${purple}*${rest}"
+echo -e "${yellow} 2) ${green}Change Paths${rest}      ${purple}*${rest}"
+echo -e "${purple}                      * ${rest}"
+echo -e "${yellow} 3) ${green}Uninstall${rest}         ${purple}*${rest}"
 echo -e "${purple}                      * ${rest}"
 echo -e "${yellow} 0) ${purple}Exit${rest}${purple}              *${rest}"
 echo -e "${purple}***********************${rest}"
@@ -250,9 +276,11 @@ read -p "Enter your choice: " choice
 case "$choice" in
     1)
         install
-        check_installation
         ;;
     2)
+        path
+        ;;
+    3)
         uninstall
         ;;
     0)

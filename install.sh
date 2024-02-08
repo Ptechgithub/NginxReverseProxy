@@ -215,8 +215,8 @@ path() {
     new_ws_path=${new_ws_path:-ws}
     echo -e "${yellow}×××××××××××××××××××××××${rest}"
     
-    sed -i "14s|location ~ .* {$|location ~ ^/${new_grpc_path}/(?<port>\\d+)/(.*)$ {|" /etc/nginx/sites-available/$saved_domain
-    sed -i "28s|location ~ .* {$|location ~ ^/${new_ws_path}/(?<port>\\d+)$ {|" /etc/nginx/sites-available/$saved_domain
+    sed -i "14s|location ~ .* {$|location ~ ^/${new_grpc_path}/(?<port>\\\d+)/(.*)$ {|" /etc/nginx/sites-available/$saved_domain
+    sed -i "28s|location ~ .* {$|location ~ ^/${new_ws_path}/(?<port>\\\d+)$ {|" /etc/nginx/sites-available/$saved_domain
     
     # Restart Nginx
     systemctl restart nginx

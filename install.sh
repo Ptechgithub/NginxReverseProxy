@@ -40,7 +40,7 @@ detect_distribution() {
 check_dependencies() {
     detect_distribution
     sudo "${p_m}" -y update && sudo "${p_m}" -y upgrade
-    local dependencies=("nginx" "git" "certbot" "python3-certbot-nginx")
+    local dependencies=("nginx" "git" "wget" "certbot" "python3-certbot-nginx")
     
     for dep in "${dependencies[@]}"; do
         if ! command -v "${dep}" &> /dev/null; then

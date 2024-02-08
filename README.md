@@ -61,4 +61,4 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Ptechgithub/NginxReverseProx
 
 
 
-[website-templates)(https://github.com/learning-zone)
+[website-templates](https://github.com/learning-zone)

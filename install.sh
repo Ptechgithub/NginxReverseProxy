@@ -238,6 +238,7 @@ install_random_fake_site() {
     if ! command -v nginx &> /dev/null; then
         echo -e "${yellow}×××××××××××××××××××××××${rest}"
         echo -e "${red}Nginx is not installed.${rest}"
+        echo -e "${yellow}×××××××××××××××××××××××${rest}"
         exit 1
     fi
 

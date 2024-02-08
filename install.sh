@@ -274,7 +274,7 @@ uninstall() {
       echo -e "${green}☑️Uninstalling... ${rest}"
 	  # Remove SSL certificate files
 	  rm -rf /etc/letsencrypt > /dev/null 2>&1
-	  rm -rf /etc/var/html/* > /dev/null 2>&1
+	  rm -rf /var/www/html/* > /dev/null 2>&1
 	
 	  # Remove NGINX configuration files
 	  find /etc/nginx/sites-available/ -mindepth 1 -maxdepth 1 ! -name 'default' -exec rm -rf {} +

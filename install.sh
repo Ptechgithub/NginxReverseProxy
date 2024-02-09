@@ -294,9 +294,9 @@ check_traffic_increase() {
     current_total_mb=\$(get_total)
 
     # Check if file exists
-    if [ -f "/root/usage/${interface}_traffic.txt" ]; then
+    if [ -f "/root/usage/\${interface}_traffic.txt" ]; then
         # Read the traffic data from file
-        read -r prev_total_mb < "/root/usage/${interface}_traffic.txt"
+        read -r prev_total_mb < "/root/usage/\${interface}_traffic.txt"
 
         # Calculate traffic increase percentage
         increase=\$(echo "scale=2; (\$current_total_mb - \$prev_total_mb) / \$prev_total_mb * 100" | bc)
@@ -308,7 +308,7 @@ check_traffic_increase() {
     fi
 
     # Save current traffic data to file
-    echo "$current_total_mb" > "/root/usage/${interface}_traffic.txt"
+    echo "\$current_total_mb" > "/root/usage/\${interface}_traffic.txt"
 }
 
 check_traffic_increase

@@ -378,6 +378,9 @@ case "$choice" in
     4)
         uninstall
         ;;
+    5)
+        uninstall
+        ;;
     0)
         echo -e "${cyan}By 🖐${rest}"
         exit

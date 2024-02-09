@@ -379,7 +379,7 @@ case "$choice" in
         uninstall
         ;;
     5)
-        get_total
+        add_limit
         ;;
     0)
         echo -e "${cyan}By 🖐${rest}"

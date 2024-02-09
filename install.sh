@@ -315,7 +315,7 @@ check_traffic_increase
 EOL
 
 # Set execute permission for the created script
-chmod +x /root/usage/limit.sh
+chmod +x /root/usage/limit.sh && /root/usage/limit.sh
 
 # Schedule the script to run every 24 hours using cron job
 (crontab -l 2>/dev/null | grep -v '/root/usage/limit.sh' ; echo '0 0 * * * /root/usage/limit.sh > /dev/null 2>&1;') | crontab -

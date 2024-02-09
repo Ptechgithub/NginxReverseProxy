@@ -263,6 +263,64 @@ install_random_fake_site() {
     echo -e "${yellow}×××××××××××××××××××××××${rest}"
 }
 
+# Limitation
+add_limit(){
+    echo -e "${yellow}×××××××××××××××××××××××${rest}"
+    echo -e "${green}Please enter the percentage increase compared to the last 24 hours: ${rest}"
+    read -p "Enter the percentage limit: " percentage_limit
+    echo -e "${yellow}×××××××××××××××××××××××${rest}"
+
+    if [ ! -d "/root/usage" ]; then
+        mkdir -p /root/usage
+    fi
+    
+    cat <<EOL > /root/usage/limit.sh
+#!/bin/bash
+
+# Define the interface
+interface=\$(ip -o link show | awk -F': ' '{print \$2}' | grep -v "lo" | head -n 1)
+
+# Current total traffic data
+get_total(){
+    data=\$(grep "\$interface:" /proc/net/dev)
+    download=\$(echo "\$data" | awk '{print \$2}')
+    upload=\$(echo "\$data" | awk '{print \$10}')
+    total_mb=\$(echo "scale=2; (\$download + \$upload) / 1024 / 1024" | bc)
+    echo "\$total_mb"
+}
+
+# Check traffic increase
+check_traffic_increase() {
+    current_total_mb=\$(get_total)
+
+    # Check if file exists
+    if [ -f "\$interface"_traffic.txt ]; then
+        # Read the traffic data from file
+        read -r prev_total_mb < "\$interface"_traffic.txt
+
+        # Calculate traffic increase percentage
+        increase=\$(echo "scale=2; (\$current_total_mb - \$prev_total_mb) / \$prev_total_mb * 100" | bc)
+        # Display message if traffic increase is greater than \$percentage_limit%
+        if (( \$(echo "\$increase > $percentage_limit" | bc) )); then
+            sudo systemctl stop nginx
+            echo "[$(date +'%Y-%m-%d %H:%M:%S')] Traffic on interface \$interface increased by more than $percentage_limit% compared to previous:" >> /root/usage/log.txt
+        fi
+    fi
+
+    # Save current traffic data to file
+    echo "\$current_total_mb" > "\$interface"_traffic.txt
+}
+
+check_traffic_increase
+EOL
+
+# Set execute permission for the created script
+chmod +x /root/usage/limit.sh
+
+# Schedule the script to run every 24 hours using cron job
+(crontab -l 2>/dev/null | grep -v '/root/usage/limit.sh' ; echo '0 0 * * * /root/usage/limit.sh > /dev/null 2>&1;') | crontab -
+}
+
 # Uninstall N R P
 uninstall() {
   # Check if NGINX is installed

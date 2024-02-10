@@ -204,7 +204,7 @@ check_installation() {
 }
 
 # Change Paths
-path() {
+change_path() {
   if systemctl is-active --quiet nginx && [ -f "/etc/nginx/sites-available/$saved_domain" ]; then
      
     echo -e "${yellow}×××××××××××××××××××××××${rest}"
@@ -321,6 +321,37 @@ chmod +x /root/usage/limit.sh && /root/usage/limit.sh
 (crontab -l 2>/dev/null | grep -v '/root/usage/limit.sh' ; echo '0 0 * * * /root/usage/limit.sh > /dev/null 2>&1;') | crontab -
 }
 
+# Change port
+change_port() {
+    if [ -f "/etc/nginx/sites-available/$saved_domain" ]; then
+        current_port=$(grep -oP "listen \[::\]:\K\d+" "/etc/nginx/sites-available/$saved_domain" | head -1)
+        echo -e "${yellow}×××××××××××××××××××××××${rest}"
+        echo -e "${cyan}Current HTTPS port: ${purple}$current_port${rest}"
+        echo -e "${yellow}×××××××××××××××××××××××${rest}"
+        read -p "Enter the new HTTPS port: " new_port
+        echo -e "${yellow}×××××××××××××××××××××××${rest}"
+
+        # Change the port in NGINX configuration file
+        sed -i "s/listen \[::\]:$current_port ssl http2 ipv6only=on;/listen [::]:$new_port ssl http2 ipv6only=on;/g" "/etc/nginx/sites-available/$saved_domain"
+        sed -i "s/listen $current_port ssl http2;/listen $new_port ssl http2;/g" "/etc/nginx/sites-available/$saved_domain"
+        
+        # Restart NGINX service
+        systemctl restart nginx
+
+        # Check if NGINX restarted successfully
+        if systemctl is-active --quiet nginx; then
+            echo -e "${green}✅ HTTPS port changed successfully to ${purple}$new_port${rest}"
+        else
+            echo -e "${red}❌ Error: NGINX failed to restart.${rest}"
+        fi
+        echo -e "${yellow}×××××××××××××××××××××××${rest}"
+    else
+        echo -e "${yellow}×××××××××××××××××××××××××××××××××××${rest}"
+        echo -e "${red}N R P is not installed or NGINX configuration file not found.${rest}"
+        echo -e "${yellow}×××××××××××××××××××××××××××××××××××${rest}"
+    fi
+}
+
 # Uninstall N R P
 uninstall() {
   # Check if NGINX is installed
@@ -358,9 +389,11 @@ echo -e "${yellow} 1) ${green}Install           ${purple}*${rest}"
 echo -e "${purple}                      * ${rest}"
 echo -e "${yellow} 2) ${green}Change Paths${rest}      ${purple}*${rest}"
 echo -e "${purple}                      * ${rest}"
-echo -e "${yellow} 3) ${green}Install Fake Site${rest} ${purple}*${rest}"
+echo -e "${yellow} 3) ${green}Change Https Port${rest} ${purple}*${rest}"
 echo -e "${purple}                      * ${rest}"
-echo -e "${yellow} 4) ${green}Uninstall${rest}         ${purple}*${rest}"
+echo -e "${yellow} 4) ${green}Install Fake Site${rest} ${purple}*${rest}"
+echo -e "${purple}                      * ${rest}"
+echo -e "${yellow} 5) ${green}Uninstall${rest}         ${purple}*${rest}"
 echo -e "${purple}                      * ${rest}"
 echo -e "${yellow} 0) ${purple}Exit${rest}${purple}              *${rest}"
 echo -e "${purple}***********************${rest}"
@@ -370,15 +403,18 @@ case "$choice" in
         install
         ;;
     2)
-        path
+        change_path
         ;;
     3)
-        install_random_fake_site
+        change_port
         ;;
     4)
-        uninstall
+        install_random_fake_site
         ;;
     5)
+        uninstall
+        ;;
+    6)
         add_limit
         ;;
     0)

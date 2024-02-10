@@ -274,8 +274,9 @@ add_limit() {
     fi
     
     echo -e "${yellow}×××××××××××××××××××××××${rest}"
-    echo -e "${cyan} This option adds a traffic limit to monitor increases in traffic compared to the last 24 hours.${rest}"
-    echo -e "${cyan} If the traffic exceeds this limit, the nginx service will be stopped.${rest}"
+    echo -e "${cyan}This option adds a traffic limit to monitor increases in traffic compared to the last 24 hours.${rest}"
+    echo -e "${cyan}If the traffic exceeds this limit, the nginx service will be stopped.${rest}"
+    echo -e "${yellow}×××××××××××××××××××××××${rest}"
     read -p "Enter the percentage limit [default: 50]: " percentage_limit
     percentage_limit=${percentage_limit:-50}
     echo -e "${yellow}×××××××××××××××××××××××${rest}"

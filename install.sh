@@ -338,7 +338,8 @@ change_port() {
         echo -e "${yellow}×××××××××××××××××××××××${rest}"
         echo -e "${cyan}Current HTTPS port: ${purple}$current_port${rest}"
         echo -e "${yellow}×××××××××××××××××××××××${rest}"
-        read -p "Enter the new HTTPS port: " new_port
+        read -p "Enter the new HTTPS port [default: 443]: " new_port
+        new_port=${new_port:-443}
         echo -e "${yellow}×××××××××××××××××××××××${rest}"
 
         # Change the port in NGINX configuration file

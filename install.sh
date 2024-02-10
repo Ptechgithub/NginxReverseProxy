@@ -235,7 +235,7 @@ ${cyan}| WebSocket Path  | ${yellow}$new_ws_path  ${cyan}
 
 # Install random site
 install_random_fake_site() {
-    if ! command -v nginx &> /dev/null; then
+    if [ ! -d "/etc/letsencrypt/live/$saved_domain" ]; then
         echo -e "${yellow}×××××××××××××××××××××××${rest}"
         echo -e "${red}Nginx is not installed.${rest}"
         echo -e "${yellow}×××××××××××××××××××××××${rest}"
@@ -264,10 +264,20 @@ install_random_fake_site() {
 }
 
 # Limitation
-add_limit(){
+add_limit() {
+    # Check if NGINX service is installed
+    if [ ! -d "/etc/letsencrypt/live/$saved_domain" ]; then
+        echo -e "${yellow}×××××××××××××××××××××××${rest}"
+        echo -e "${red}N R P is not installed.${rest}"
+        echo -e "${yellow}×××××××××××××××××××××××${rest}"
+        exit 1
+    fi
+    
     echo -e "${yellow}×××××××××××××××××××××××${rest}"
-    echo -e "${green}Please enter the percentage increase compared to the last 24 hours: ${rest}"
-    read -p "Enter the percentage limit: " percentage_limit
+    echo -e "${cyan} This option adds a traffic limit to monitor increases in traffic compared to the last 24 hours.${rest}"
+    echo -e "${cyan} If the traffic exceeds this limit, the nginx service will be stopped.${rest}"
+    read -p "Enter the percentage limit [default: 50]: " percentage_limit
+    percentage_limit=${percentage_limit:-50}
     echo -e "${yellow}×××××××××××××××××××××××${rest}"
 
     if [ ! -d "/root/usage" ]; then
@@ -347,7 +357,7 @@ change_port() {
         echo -e "${yellow}×××××××××××××××××××××××${rest}"
     else
         echo -e "${yellow}×××××××××××××××××××××××××××××××××××${rest}"
-        echo -e "${red}N R P is not installed or NGINX configuration file not found.${rest}"
+        echo -e "${red}N R P is not installed.${rest}"
         echo -e "${yellow}×××××××××××××××××××××××××××××××××××${rest}"
     fi
 }
@@ -393,7 +403,9 @@ echo -e "${yellow} 3) ${green}Change Https Port${rest} ${purple}*${rest}"
 echo -e "${purple}                      * ${rest}"
 echo -e "${yellow} 4) ${green}Install Fake Site${rest} ${purple}*${rest}"
 echo -e "${purple}                      * ${rest}"
-echo -e "${yellow} 5) ${green}Uninstall${rest}         ${purple}*${rest}"
+echo -e "${yellow} 5) ${green}Add Traffic Limit${rest} ${purple}*${rest}"
+echo -e "${purple}                      * ${rest}"
+echo -e "${yellow} 6) ${green}Uninstall${rest}         ${purple}*${rest}"
 echo -e "${purple}                      * ${rest}"
 echo -e "${yellow} 0) ${purple}Exit${rest}${purple}              *${rest}"
 echo -e "${purple}***********************${rest}"
@@ -412,10 +424,10 @@ case "$choice" in
         install_random_fake_site
         ;;
     5)
-        uninstall
+        add_limit
         ;;
     6)
-        add_limit
+        uninstall
         ;;
     0)
         echo -e "${cyan}By 🖐${rest}"

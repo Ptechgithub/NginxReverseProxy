@@ -2,7 +2,7 @@
 
 [English README](https://github.com/Ptechgithub/NginxReverseProxy/blob/main/README_ENGLISH.md)
 
-## Install
+## نصب
 ```
 bash <(curl -fsSL https://raw.githubusercontent.com/Ptechgithub/NginxReverseProxy/main/install.sh)
 ```

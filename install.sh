@@ -273,9 +273,22 @@ add_limit() {
         exit 1
     fi
     
+total_usage(){
+    interface=$(ip -o link show | awk -F': ' '{print $2}' | grep -v "lo" | head -n 1) > /dev/null 2>&1
+    data=$(grep "$interface:" /proc/net/dev)
+    download=$(echo "$data" | awk '{print $2}')
+    upload=$(echo "$data" | awk '{print $10}')
+    total_mb=$(echo "scale=2; ($download + $upload) / 1024 / 1024" | bc)
+    echo -e "${cyan}T${yellow}o${cyan}t${yellow}a${cyan}l${yellow} U${cyan}s${yellow}a${cyan}g${yellow}e${cyan}: ${purple}[$total_mb] ${cyan}MB${rest}"
+}
+
     echo -e "${yellow}×××××××××××××××××××××××${rest}"
-    echo -e "${cyan}This option adds a traffic limit to monitor increases in traffic compared to the last 24 hours.${rest}"
-    echo -e "${cyan}If the traffic exceeds this limit, the nginx service will be stopped.${rest}"
+    echo -e "${yellow}* ${cyan}This option adds a traffic limit to monitor increases in traffic compared to the last 24 hours.${yellow}*${rest}"
+    echo ""
+    echo -e "${yellow}* ${cyan}If the traffic exceeds this limit, the nginx service will be stopped.${yellow}*${rest}"
+    echo ""
+    total_usage
+    echo -e "${yellow}* ${cyan}[${yellow}Note${cyan}]: ${cyan}After restarting the server, the ${cyan}T${yellow}o${cyan}t${yellow}a${cyan}l${yellow} U${cyan}s${yellow}a${cyan}g${yellow}e${cyan} will also be reset.${yellow}*${rest}"
     echo -e "${yellow}×××××××××××××××××××××××${rest}"
     read -p "Enter the percentage limit [default: 50]: " percentage_limit
     percentage_limit=${percentage_limit:-50}
